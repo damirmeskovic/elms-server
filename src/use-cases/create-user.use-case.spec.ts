@@ -19,37 +19,43 @@ describe('Create User', () => {
     createUser = new CreateUser(findUser, save);
   });
 
-  it('returns null if email is missing', async () => {
-    const createdUser = await createUser.withProperties({
-      email: null,
-      username: 'username',
-      password: 'something',
-    });
-
-    expect(createdUser).toBeNull();
+  it('throws if email is missing', async () => {
+    await expect(() =>
+      createUser.withProperties({
+        email: null,
+        username: 'username',
+        password: 'something',
+      }),
+    ).rejects.toThrow('Invalid request, required fields missing!');
   });
 
   it('returns null if username is missing', async () => {
-    const createdUser = await createUser.withProperties({
-      email: 'some@email.com',
-      username: '',
-      password: 'something',
-    });
-
-    expect(createdUser).toBeNull();
+    await expect(() =>
+      createUser.withProperties({
+        email: 'some@email.com',
+        username: '',
+        password: 'something',
+      }),
+    ).rejects.toThrow('Invalid request, required fields missing!');
   });
 
   it('returns null if password is missing', async () => {
-    const createdUser = await createUser.withProperties({
-      email: 'some@email.com',
-      username: 'username',
-      password: undefined,
-    });
-
-    expect(createdUser).toBeNull();
+    await expect(() =>
+      createUser.withProperties({
+        email: 'some@email.com',
+        username: 'username',
+        password: undefined,
+      }),
+    ).rejects.toThrow('Invalid request, required fields missing!');
   });
 
   it('throws if username is taken', async () => {
+    inMemoryRepository.users.save({
+      email: 'admin@email.com',
+      username: 'admin',
+      password: 'admin',
+    });
+
     await expect(() =>
       createUser.withProperties({
         email: 'some@email.com',
@@ -60,6 +66,12 @@ describe('Create User', () => {
   });
 
   it('throws if user with requested email already exists', async () => {
+    inMemoryRepository.users.save({
+      email: 'admin@email.com',
+      username: 'admin',
+      password: 'admin',
+    });
+
     await expect(() =>
       createUser.withProperties({
         email: 'admin@email.com',

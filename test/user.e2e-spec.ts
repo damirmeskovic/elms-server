@@ -48,8 +48,6 @@ describe('/api/user', () => {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
-      name: 'Admin McAdminface',
-      bio: 'I am the administrator!',
     });
 
     return request(app.getHttpServer())
@@ -96,8 +94,6 @@ describe('/api/user', () => {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
-      name: 'Admin McAdminface',
-      bio: 'I am the administrator!',
     });
 
     const loggedInUser = await login({
