@@ -4,14 +4,7 @@ import { Repository } from 'src/use-cases/types/repository.types';
 
 @Injectable()
 export class InMemoryRepository implements Repository {
-  private readonly userCollection: User[] = [
-    {
-      email: 'admin@email.com',
-      username: 'admin',
-      password: 'admin',
-      bio: 'I am the administrator!',
-    },
-  ];
+  private readonly userCollection: User[] = [];
 
   readonly users = {
     save: async (user: User): Promise<User> => {
