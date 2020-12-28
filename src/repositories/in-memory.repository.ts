@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { async } from 'rxjs';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'src/use-cases/types/repository.types';
 
@@ -14,9 +15,12 @@ export class InMemoryRepository implements Repository {
   ];
 
   readonly users = {
+    save: (user: User) => this.userCollection.push(user),
+
     find: async (username: string): Promise<User> =>
       this.userCollection.find((user) => user.username === username),
 
-    save: (user: User) => this.userCollection.push(user),
+    findByEmail: async (email: string): Promise<User> =>
+      this.userCollection.find((user) => user.email === email),
   };
 }
