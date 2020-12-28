@@ -18,7 +18,7 @@ export class CreateUser {
 
   async withProperties(request: Request): Promise<User> {
     if (!request.email || !request.username || !request.password) {
-      return null;
+      throw new Error('Invalid request, required fields missing!');
     }
 
     if (await this.isUsernameTaken(request.username)) {

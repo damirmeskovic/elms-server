@@ -10,7 +10,7 @@ export class LocalJsonRepository implements Repository {
 
   constructor() {
     this.db = new JsonDB(new Config('elms-database', true, true, '/'));
-    if (this.db.getData('/users')) {
+    if (this.db.exists('/users')) {
       return;
     }
     // deafult 'admin/admin' user

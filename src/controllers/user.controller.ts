@@ -1,28 +1,39 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GenerateToken } from '../use-cases/generate-token.use-case';
+import { exception } from 'console';
+import { CreateUser } from 'src/use-cases/create-user.use-case';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { LoginAuthGuard } from '../authentication/login.guard';
-import { UserDto } from './types/user.dto';
+import { GenerateToken } from '../use-cases/generate-token.use-case';
+import { CreateUserDto } from './types/create-user.dto';
 import { CredentialsDto } from './types/credentials.dto';
+import { UserProfileDto } from './types/user-profile.dto';
+import { UserDto } from './types/user.dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly generateToken: GenerateToken) {}
+  constructor(
+    private readonly generateToken: GenerateToken,
+    private readonly createUser: CreateUser,
+  ) {}
 
   @ApiCreatedResponse({
     description: 'User was succesfully logged in.',
@@ -65,5 +76,27 @@ export class UserController {
       name: user.name,
       bio: user.bio,
     };
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Returns the created user.',
+    type: UserDto,
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
+  @ApiBadRequestResponse({
+    description: 'User could not be created, see error message for details.',
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async create(@Body() createUser: CreateUserDto): Promise<UserProfileDto> {
+    try {
+      const user = await this.createUser.withProperties(createUser);
+      return {
+        ...user,
+      };
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
