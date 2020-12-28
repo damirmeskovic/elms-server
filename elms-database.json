@@ -1,0 +1,10 @@
+{
+    "users": [
+        {
+            "email": "admin@email.com",
+            "username": "admin",
+            "password": "admin",
+            "bio": "I am the administrator!"
+        }
+    ]
+}
