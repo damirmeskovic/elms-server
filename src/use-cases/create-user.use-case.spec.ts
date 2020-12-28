@@ -1,23 +1,22 @@
-import { create } from 'domain';
 import { InMemoryRepository } from '../repositories/in-memory.repository';
-import { CreateUser } from './create-user.use-case';
+import { CreateUser, Request } from './create-user.use-case';
 import { FindUser } from './find-user.use-case';
-import { SaveUser } from './save-user.use-case';
+import { Save } from './save.use-case';
 import { Repository } from './types/repository.types';
 
 describe('Create User', () => {
   let inMemoryRepository: Repository;
   let findUser: FindUser;
-  let saveUser: SaveUser;
+  let save: Save;
 
   let createUser: CreateUser;
 
   beforeEach(async () => {
     inMemoryRepository = new InMemoryRepository();
     findUser = new FindUser(inMemoryRepository);
-    saveUser = new SaveUser(inMemoryRepository);
+    save = new Save(inMemoryRepository);
 
-    createUser = new CreateUser(findUser, saveUser);
+    createUser = new CreateUser(findUser, save);
   });
 
   it('returns null if email is missing', async () => {
@@ -68,5 +67,20 @@ describe('Create User', () => {
         password: 'passsword',
       }),
     ).rejects.toThrow('User with requested email already exists!');
+  });
+
+  it('saves and returns the user with requested properties', async () => {
+    const request: Request = {
+      email: 'some@email.com',
+      username: 'someone',
+      password: 'somePass',
+      name: 'Someone McSomeoneface',
+      bio: 'I am somebody!',
+    };
+
+    const createdUser = await createUser.withProperties(request);
+    const savedUser = await findUser.withUsername(request.username);
+
+    expect(savedUser).toEqual(createdUser);
   });
 });

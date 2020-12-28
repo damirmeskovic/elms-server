@@ -1,7 +1,7 @@
 import { User } from 'src/entities/user.entity';
 
 export interface UserRepository {
-  save(item: User);
+  save(item: User): Promise<User>;
   find(username: string): Promise<User>;
   findByEmail(email: string): Promise<User>;
 }

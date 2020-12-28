@@ -41,6 +41,7 @@ export class UserAuthenticationController {
       token,
       email: user.email,
       username: user.username,
+      name: user.name,
       bio: user.bio,
     };
   }
@@ -61,6 +62,7 @@ export class UserAuthenticationController {
       token,
       email: user.email,
       username: user.username,
+      name: user.name,
       bio: user.bio,
     };
   }

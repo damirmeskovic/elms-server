@@ -1,6 +1,6 @@
 import { User } from 'src/entities/user.entity';
 import { FindUser } from './find-user.use-case';
-import { SaveUser } from './save-user.use-case';
+import { Save } from './save.use-case';
 
 export interface Request {
   email: string;
@@ -13,7 +13,7 @@ export interface Request {
 export class CreateUser {
   constructor(
     private readonly findUser: FindUser,
-    private readonly saveUser: SaveUser,
+    private readonly saveUser: Save,
   ) {}
 
   async withProperties(request: Request): Promise<User> {
@@ -29,7 +29,7 @@ export class CreateUser {
       throw new Error('User with requested email already exists!');
     }
 
-    throw new Error('Method not implemented.');
+    return await this.saveUser.user(request);
   }
 
   private async isUsernameTaken(username: string): Promise<boolean> {

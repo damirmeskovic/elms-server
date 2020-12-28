@@ -8,5 +8,7 @@ export class UserDto {
   @ApiProperty()
   readonly username: string;
   @ApiPropertyOptional()
+  readonly name?: string;
+  @ApiPropertyOptional()
   readonly bio?: string;
 }

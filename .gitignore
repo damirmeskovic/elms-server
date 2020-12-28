@@ -35,3 +35,6 @@ lerna-debug.log*
 
 # Local scratch files
 /scratch
+
+# Local database
+elms-database.json

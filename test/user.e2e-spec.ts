@@ -62,6 +62,7 @@ describe('/api/user', () => {
         expect(body.token.length).toBeGreaterThan(0);
         expect(body.username).toEqual('admin');
         expect(body.email).toEqual('admin@email.com');
+        expect(body.name).toEqual('Admin McAdminface');
         expect(body.bio).toEqual('I am the administrator!');
       });
   });

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'src/use-cases/types/repository.types';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
 import { User } from 'src/entities/user.entity';
+import { Repository } from 'src/use-cases/types/repository.types';
 
 @Injectable()
 export class LocalJsonRepository implements Repository {
@@ -10,19 +10,29 @@ export class LocalJsonRepository implements Repository {
 
   constructor() {
     this.db = new JsonDB(new Config('elms-database', true, true, '/'));
+    if (this.db.getData('/users')) {
+      return;
+    }
     // deafult 'admin/admin' user
     this.db.push('/users[0]', {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
+      name: 'Admin McAdminface',
       bio: 'I am the administrator!',
     });
   }
 
   readonly users = {
-    find: async (username: string): Promise<User> =>
-      this.db.getData('/users/').find((user) => user.username === username),
+    save: async (user: User) => {
+      this.db.push('/users[]', user);
+      return await this.users.find(user.username);
+    },
 
-    save: (user: User) => this.db.push('/users[]', user),
+    find: async (username: string): Promise<User> =>
+      this.db.getData('/users').find((user) => user.username === username),
+
+    findByEmail: async (email: string): Promise<User> =>
+      this.db.getData('/users').find((user) => user.email === email),
   };
 }
