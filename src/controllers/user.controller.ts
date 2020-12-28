@@ -21,7 +21,7 @@ import { CredentialsDto } from './types/credentials.dto';
 
 @ApiTags('user')
 @Controller('user')
-export class UserAuthenticationController {
+export class UserController {
   constructor(private readonly generateToken: GenerateToken) {}
 
   @ApiCreatedResponse({
