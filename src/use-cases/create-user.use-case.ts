@@ -13,7 +13,7 @@ export interface Request {
 export class CreateUser {
   constructor(
     private readonly findUser: FindUser,
-    private readonly saveUser: Save,
+    private readonly save: Save,
   ) {}
 
   async withProperties(request: Request): Promise<User> {
@@ -29,7 +29,7 @@ export class CreateUser {
       throw new Error('User with requested email already exists!');
     }
 
-    return await this.saveUser.user(request);
+    return await this.save.user({ ...request });
   }
 
   private async isUsernameTaken(username: string): Promise<boolean> {
