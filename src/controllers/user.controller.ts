@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -10,17 +9,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { exception } from 'console';
-import { CreateUser } from 'src/use-cases/create-user.use-case';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { LoginAuthGuard } from '../authentication/login.guard';
+import { CreateUser } from '../use-cases/create-user.use-case';
 import { GenerateToken } from '../use-cases/generate-token.use-case';
 import { CreateUserDto } from './types/create-user.dto';
 import { CredentialsDto } from './types/credentials.dto';
@@ -79,7 +77,7 @@ export class UserController {
   }
 
   @ApiBearerAuth()
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Returns the created user.',
     type: UserDto,
   })
@@ -93,7 +91,10 @@ export class UserController {
     try {
       const user = await this.createUser.withProperties(createUser);
       return {
-        ...user,
+        email: user.email,
+        username: user.username,
+        name: user.name,
+        bio: user.bio,
       };
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST);

@@ -1,11 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CredentialsDto } from '../src/controllers/types/credentials.dto';
-import { UserDto } from '../src/controllers/types/user.dto';
-import { Repository } from '../src/use-cases/types/repository.types';
+import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
+import { UserDto } from '../../src/controllers/types/user.dto';
+import { Repository } from '../../src/use-cases/types/repository.types';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { InMemoryRepository } from '../src/repositories/in-memory.repository';
+import { AppModule } from '../../src/app.module';
+import { InMemoryRepository } from '../../src/repositories/in-memory.repository';
 
 describe('/api/user', () => {
   let app: INestApplication;
