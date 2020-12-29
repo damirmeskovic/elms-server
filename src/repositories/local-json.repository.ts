@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
-import { User } from 'src/entities/user.entity';
-import { Repository } from 'src/use-cases/types/repository.types';
+import { Role } from '../entities/role.enum';
+import { User } from '../entities/user.entity';
+import { Repository } from '../use-cases/types/repository.types';
 
 @Injectable()
 export class LocalJsonRepository implements Repository {
@@ -18,6 +19,7 @@ export class LocalJsonRepository implements Repository {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
+      roles: [Role.Admin],
       name: 'Admin McAdminface',
       bio: 'I am the administrator!',
     });

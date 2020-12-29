@@ -6,6 +6,7 @@ import { Repository } from '../../src/use-cases/types/repository.types';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { InMemoryRepository } from '../../src/repositories/in-memory.repository';
+import { Role } from '../../src/entities/role.enum';
 
 describe('/api/user', () => {
   let app: INestApplication;
@@ -48,6 +49,7 @@ describe('/api/user', () => {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
+      roles: [Role.Admin],
     });
 
     return request(app.getHttpServer())
@@ -64,6 +66,7 @@ describe('/api/user', () => {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
+      roles: [Role.Admin],
       name: 'Admin McAdminface',
       bio: 'I am the administrator!',
     });
@@ -80,6 +83,7 @@ describe('/api/user', () => {
         expect(body.token.length).toBeGreaterThan(0);
         expect(body.username).toEqual('admin');
         expect(body.email).toEqual('admin@email.com');
+        expect(body.roles).toEqual(['Admin']);
         expect(body.name).toEqual('Admin McAdminface');
         expect(body.bio).toEqual('I am the administrator!');
       });
@@ -94,6 +98,7 @@ describe('/api/user', () => {
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
+      roles: [Role.Admin],
     });
 
     const loggedInUser = await login({

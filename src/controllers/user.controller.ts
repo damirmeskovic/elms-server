@@ -12,12 +12,16 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { LoginAuthGuard } from '../authentication/login.guard';
+import { Roles } from '../authentication/roles.decorator';
+import { RolesGuard } from '../authentication/roles.guard';
+import { Role } from '../entities/role.enum';
 import { CreateUser } from '../use-cases/create-user.use-case';
 import { GenerateToken } from '../use-cases/generate-token.use-case';
 import { CreateUserDto } from './types/create-user.dto';
@@ -50,6 +54,7 @@ export class UserController {
       token,
       email: user.email,
       username: user.username,
+      roles: user.roles,
       name: user.name,
       bio: user.bio,
     };
@@ -71,6 +76,7 @@ export class UserController {
       token,
       email: user.email,
       username: user.username,
+      roles: user.roles,
       name: user.name,
       bio: user.bio,
     };
@@ -79,13 +85,17 @@ export class UserController {
   @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'Returns the created user.',
-    type: UserDto,
+    type: UserProfileDto,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
+  @ApiForbiddenResponse({
+    description: 'User does not have necessary permisions.',
+  })
   @ApiBadRequestResponse({
     description: 'User could not be created, see error message for details.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
   @Post()
   async create(@Body() createUser: CreateUserDto): Promise<UserProfileDto> {
     try {
@@ -93,6 +103,7 @@ export class UserController {
       return {
         email: user.email,
         username: user.username,
+        roles: user.roles,
         name: user.name,
         bio: user.bio,
       };
