@@ -4,19 +4,20 @@ import { Repository } from './types/repository.types';
 import { AuthenticateUser } from './authenticate-user.use-case';
 
 describe('Authenticate User', () => {
-  let userAuthentication: AuthenticateUser;
   let inMemoryRepository: Repository;
-  let fetch: FindUser;
+  let findUser: FindUser;
+
+  let authenticateUser: AuthenticateUser;
 
   beforeEach(async () => {
     inMemoryRepository = new InMemoryRepository();
-    fetch = new FindUser(inMemoryRepository);
+    findUser = new FindUser(inMemoryRepository);
 
-    userAuthentication = new AuthenticateUser(fetch);
+    authenticateUser = new AuthenticateUser(findUser);
   });
 
   it('returns null for null username', async () => {
-    const user = await userAuthentication.withCredentials({
+    const user = await authenticateUser.withCredentials({
       username: null,
       password: 'something',
     });
@@ -25,7 +26,7 @@ describe('Authenticate User', () => {
   });
 
   it('returns null for null password', async () => {
-    const user = await userAuthentication.withCredentials({
+    const user = await authenticateUser.withCredentials({
       username: 'username',
       password: null,
     });
@@ -34,7 +35,7 @@ describe('Authenticate User', () => {
   });
 
   it('returns null for unknown user', async () => {
-    const user = await userAuthentication.withCredentials({
+    const user = await authenticateUser.withCredentials({
       username: 'unknown',
       password: 'something',
     });
@@ -51,7 +52,7 @@ describe('Authenticate User', () => {
 
     inMemoryRepository.users.save(existingUser);
 
-    const user = await userAuthentication.withCredentials({
+    const user = await authenticateUser.withCredentials({
       username: 'damir',
       password: 'wrongPassword',
     });
@@ -68,7 +69,7 @@ describe('Authenticate User', () => {
 
     inMemoryRepository.users.save(existingUser);
 
-    const user = await userAuthentication.withCredentials({
+    const user = await authenticateUser.withCredentials({
       username: existingUser.username,
       password: existingUser.password,
     });

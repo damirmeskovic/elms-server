@@ -1,20 +1,25 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CredentialsDto } from 'src/controllers/types/credentials.dto';
-import { UserDto } from 'src/controllers/types/user.dto';
+import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
+import { UserDto } from '../../src/controllers/types/user.dto';
+import { Repository } from '../../src/use-cases/types/repository.types';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { InMemoryRepository } from '../src/repositories/in-memory.repository';
+import { AppModule } from '../../src/app.module';
+import { InMemoryRepository } from '../../src/repositories/in-memory.repository';
+import { Role } from '../../src/entities/role.enum';
 
 describe('/api/user', () => {
   let app: INestApplication;
+  let inMemoryRepository: Repository;
 
   beforeEach(async () => {
+    inMemoryRepository = new InMemoryRepository();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider('UserRepository')
-      .useClass(InMemoryRepository)
+      .overrideProvider(Repository)
+      .useValue(inMemoryRepository)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -40,6 +45,13 @@ describe('/api/user', () => {
   });
 
   it('Login with incorrect credentials is unauthorized', () => {
+    inMemoryRepository.users.save({
+      email: 'admin@email.com',
+      username: 'admin',
+      password: 'admin',
+      roles: [Role.Admin],
+    });
+
     return request(app.getHttpServer())
       .post('/api/user/login')
       .send({
@@ -50,6 +62,15 @@ describe('/api/user', () => {
   });
 
   it('Logged in user is returned for correct credentials', () => {
+    inMemoryRepository.users.save({
+      email: 'admin@email.com',
+      username: 'admin',
+      password: 'admin',
+      roles: [Role.Admin],
+      name: 'Admin McAdminface',
+      bio: 'I am the administrator!',
+    });
+
     return request(app.getHttpServer())
       .post('/api/user/login')
       .send({
@@ -62,6 +83,8 @@ describe('/api/user', () => {
         expect(body.token.length).toBeGreaterThan(0);
         expect(body.username).toEqual('admin');
         expect(body.email).toEqual('admin@email.com');
+        expect(body.roles).toEqual(['Admin']);
+        expect(body.name).toEqual('Admin McAdminface');
         expect(body.bio).toEqual('I am the administrator!');
       });
   });
@@ -71,6 +94,13 @@ describe('/api/user', () => {
   });
 
   it('Current user is returned if logged in', async () => {
+    inMemoryRepository.users.save({
+      email: 'admin@email.com',
+      username: 'admin',
+      password: 'admin',
+      roles: [Role.Admin],
+    });
+
     const loggedInUser = await login({
       username: 'admin',
       password: 'admin',

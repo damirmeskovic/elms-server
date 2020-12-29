@@ -1,13 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '../../entities/role.enum';
 
-export class UserDto {
+export class CreateUserDto {
   @ApiProperty()
   readonly email: string;
   @ApiProperty()
-  readonly token: string;
-  @ApiProperty()
   readonly username: string;
+  @ApiProperty()
+  readonly password: string;
   @ApiPropertyOptional({ enum: Role, isArray: true })
   readonly roles?: Role[];
   @ApiPropertyOptional()

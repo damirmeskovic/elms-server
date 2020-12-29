@@ -7,4 +7,8 @@ export class FindUser {
   async withUsername(username: string): Promise<User> {
     return await this.repository.users.find(username);
   }
+
+  async withEmail(email: string): Promise<User> {
+    return await this.repository.users.findByEmail(email);
+  }
 }
