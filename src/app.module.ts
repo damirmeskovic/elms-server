@@ -8,6 +8,7 @@ import { JwtStrategy } from './authentication/jwt.strategy';
 import { LoginStrategy } from './authentication/login.strategy';
 import { RolesGuard } from './authentication/roles.guard';
 import { UserController } from './controllers/user.controller';
+import { UsersController } from './controllers/users.controller';
 import useCases from './use-cases.config';
 
 @Module({
@@ -18,7 +19,7 @@ import useCases from './use-cases.config';
       signOptions: { expiresIn: '3600s' },
     }),
   ],
-  controllers: [UserController],
+  controllers: [UserController, UsersController],
   providers: [
     LoginStrategy,
     JwtStrategy,
