@@ -2,6 +2,7 @@ import { JwtTokenGenerator } from './authentication/jwt-token.generator';
 import { AuthenticateUser } from './use-cases/authenticate-user.use-case';
 import { CreateUser } from './use-cases/create-user.use-case';
 import { FindUser } from './use-cases/find-user.use-case';
+import { FindUsers } from './use-cases/find-users.use-case';
 import { GenerateToken } from './use-cases/generate-token.use-case';
 import { Save } from './use-cases/save.use-case';
 import { Repository } from './use-cases/types/repository.types';
@@ -39,4 +40,17 @@ const createUser = {
   inject: [FindUser, Save],
 };
 
-export default [generateToken, findUser, save, authenticateUser, createUser];
+const findUsers = {
+  provide: FindUsers,
+  useFactory: (repository: Repository) => new FindUsers(repository),
+  inject: [Repository],
+};
+
+export default [
+  generateToken,
+  findUser,
+  save,
+  authenticateUser,
+  createUser,
+  findUsers,
+];
