@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig';
-import { off } from 'process';
 import {
   Query as UserQuery,
   Result as UserQueryResult,
@@ -9,6 +8,7 @@ import {
 import { Role } from '../entities/role.enum';
 import { User } from '../entities/user.entity';
 import { Repository } from '../use-cases/types/repository.types';
+import { Record } from './types/record.type';
 
 @Injectable()
 export class LocalJsonRepository implements Repository {
@@ -20,7 +20,7 @@ export class LocalJsonRepository implements Repository {
       return;
     }
     // deafult 'admin/admin' user
-    this.db.push('/users[0]', {
+    this.users.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
@@ -32,21 +32,30 @@ export class LocalJsonRepository implements Repository {
 
   readonly users = {
     save: async (user: User) => {
-      this.db.push('/users[]', user);
+      this.db.push('/users[]', {
+        identifier: user.username,
+        value: user,
+        timestamp: Date.now(),
+      });
       return await this.users.find(user.username);
     },
 
     find: async (username: string): Promise<User> =>
-      this.db.getData('/users').find((user) => user.username === username),
+      this.latest(
+        this.db
+          .getData('/users')
+          .filter((record) => record.identifier === username),
+      ),
 
     findByEmail: async (email: string): Promise<User> =>
-      this.db.getData('/users').find((user) => user.email === email),
+      this.allLatest<User>(this.db.getData('/users')).find(
+        (user) => user.email === email,
+      ),
 
     query: async (query: UserQuery): Promise<UserQueryResult> => {
       const offset = query.offset || 0;
       const limit = query.limit || 100;
-      const result = this.db
-        .getData('/users')
+      const result = this.allLatest<User>(this.db.getData('/users'))
         .filter(
           (user) =>
             !query.email ||
@@ -85,4 +94,19 @@ export class LocalJsonRepository implements Repository {
       };
     },
   };
+
+  private readonly latest = <T>(records: Record<T>[]): T => {
+    return records.length
+      ? records.reduce((recA, recB) =>
+          recA.timestamp > recB.timestamp ? recA : recB,
+        ).value
+      : null;
+  };
+
+  private readonly allLatest = <T>(collection: Record<T>[]): T[] =>
+    [...new Set(collection.map((record) => record.identifier))]
+      .map((identifier) =>
+        collection.filter((record) => record.identifier == identifier),
+      )
+      .map((recordVersions) => this.latest(recordVersions));
 }

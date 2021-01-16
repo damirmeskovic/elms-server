@@ -7,6 +7,7 @@ import { GenerateToken } from './use-cases/generate-token.use-case';
 import { Save } from './use-cases/save.use-case';
 import { Repository } from './use-cases/types/repository.types';
 import { TokenGenerator } from './use-cases/types/token-generator.types';
+import { UpdateUser } from './use-cases/update-user.use-case';
 
 const generateToken = {
   provide: GenerateToken,
@@ -40,6 +41,13 @@ const createUser = {
   inject: [FindUser, Save],
 };
 
+const updateUser = {
+  provide: UpdateUser,
+  useFactory: (findUser: FindUser, save: Save) =>
+    new UpdateUser(findUser, save),
+  inject: [FindUser, Save],
+};
+
 const findUsers = {
   provide: FindUsers,
   useFactory: (repository: Repository) => new FindUsers(repository),
@@ -52,5 +60,6 @@ export default [
   save,
   authenticateUser,
   createUser,
+  updateUser,
   findUsers,
 ];

@@ -1,3 +1,4 @@
+import { Role } from 'src/entities/role.enum';
 import { User } from 'src/entities/user.entity';
 import { FindUser } from './find-user.use-case';
 import { Save } from './save.use-case';
@@ -6,6 +7,7 @@ export interface Request {
   email: string;
   username: string;
   password: string;
+  roles?: Role[];
   name?: string;
   bio?: string;
 }

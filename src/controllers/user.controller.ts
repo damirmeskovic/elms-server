@@ -4,7 +4,9 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +16,7 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -24,8 +27,10 @@ import { RolesGuard } from '../authentication/roles.guard';
 import { Role } from '../entities/role.enum';
 import { CreateUser } from '../use-cases/create-user.use-case';
 import { GenerateToken } from '../use-cases/generate-token.use-case';
+import { UpdateUser } from '../use-cases/update-user.use-case';
 import { CreateUserDto } from './types/create-user.dto';
 import { CredentialsDto } from './types/credentials.dto';
+import { UpdateUserDto } from './types/update-user.dto';
 import { UserProfileDto } from './types/user-profile.dto';
 import { UserDto } from './types/user.dto';
 
@@ -35,6 +40,7 @@ export class UserController {
   constructor(
     private readonly generateToken: GenerateToken,
     private readonly createUser: CreateUser,
+    private readonly updateUser: UpdateUser,
   ) {}
 
   @ApiCreatedResponse({
@@ -100,6 +106,49 @@ export class UserController {
   async create(@Body() createUser: CreateUserDto): Promise<UserProfileDto> {
     try {
       const user = await this.createUser.withProperties(createUser);
+      return {
+        email: user.email,
+        username: user.username,
+        roles: user.roles,
+        name: user.name,
+        bio: user.bio,
+      };
+    } catch (e) {
+      throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Returns the updated user.',
+    type: UserProfileDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized.',
+  })
+  @ApiForbiddenResponse({
+    description: 'User does not have necessary permisions.',
+  })
+  @ApiBadRequestResponse({
+    description: 'User could not be updated, see error message for details.',
+  })
+  @ApiParam({
+    name: 'username',
+    type: 'string',
+    required: true,
+  })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Put(':username')
+  async update(
+    @Param('username') username: string,
+    @Body() updateUser: UpdateUserDto,
+  ): Promise<UserProfileDto> {
+    try {
+      const user = await this.updateUser.withProperties({
+        username,
+        ...updateUser,
+      });
       return {
         email: user.email,
         username: user.username,

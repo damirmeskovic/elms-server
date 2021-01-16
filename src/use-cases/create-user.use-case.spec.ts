@@ -1,3 +1,4 @@
+import { Role } from '../entities/role.enum';
 import { InMemoryRepository } from '../repositories/in-memory.repository';
 import { CreateUser, Request } from './create-user.use-case';
 import { FindUser } from './find-user.use-case';
@@ -29,7 +30,7 @@ describe('Create User', () => {
     ).rejects.toThrow('Invalid request, required fields missing!');
   });
 
-  it('returns null if username is missing', async () => {
+  it('throws if username is missing', async () => {
     await expect(() =>
       createUser.withProperties({
         email: 'some@email.com',
@@ -39,7 +40,7 @@ describe('Create User', () => {
     ).rejects.toThrow('Invalid request, required fields missing!');
   });
 
-  it('returns null if password is missing', async () => {
+  it('throws if password is missing', async () => {
     await expect(() =>
       createUser.withProperties({
         email: 'some@email.com',
@@ -86,6 +87,7 @@ describe('Create User', () => {
       email: 'some@email.com',
       username: 'someone',
       password: 'somePass',
+      roles: [Role.Admin, Role.Librarian],
       name: 'Someone McSomeoneface',
       bio: 'I am somebody!',
     };

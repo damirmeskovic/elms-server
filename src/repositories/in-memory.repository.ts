@@ -4,28 +4,35 @@ import {
   Query as UserQuery,
   Result as UserQueryResult,
 } from 'src/use-cases/find-users.use-case';
-import { Repository } from 'src/use-cases/types/repository.types';
+import { Repository } from '../use-cases/types/repository.types';
+import { Record } from './types/record.type';
 
 @Injectable()
-export class InMemoryRepository implements Repository {
-  private readonly userCollection: User[] = [];
+export class InMemoryRepository extends Repository {
+  private readonly userCollection: Record<User>[] = [];
 
   readonly users = {
     save: async (user: User): Promise<User> => {
-      this.userCollection.push(user);
+      this.userCollection.push({
+        identifier: user.username,
+        value: user,
+        timestamp: Date.now(),
+      });
       return await this.users.find(user.username);
     },
 
     find: async (username: string): Promise<User> =>
-      this.userCollection.find((user) => user.username === username),
+      this.latest(
+        this.userCollection.filter((record) => record.identifier === username),
+      ),
 
     findByEmail: async (email: string): Promise<User> =>
-      this.userCollection.find((user) => user.email === email),
+      this.allLatest(this.userCollection).find((user) => user.email === email),
 
     query: async (query: UserQuery): Promise<UserQueryResult> => {
       const offset = query.offset || 0;
       const limit = query.limit || 100;
-      const result = this.userCollection
+      const result = this.allLatest(this.userCollection)
         .filter(
           (user) =>
             !query.email ||
@@ -64,4 +71,19 @@ export class InMemoryRepository implements Repository {
       };
     },
   };
+
+  private readonly latest = <T>(records: Record<T>[]): T => {
+    return records.length
+      ? records.reduce((recA, recB) =>
+          recA.timestamp > recB.timestamp ? recA : recB,
+        ).value
+      : null;
+  };
+
+  private readonly allLatest = <T>(collection: Record<T>[]): T[] =>
+    [...new Set(collection.map((record) => record.identifier))]
+      .map((identifier) =>
+        collection.filter((record) => record.identifier == identifier),
+      )
+      .map((recordVersions) => this.latest(recordVersions));
 }

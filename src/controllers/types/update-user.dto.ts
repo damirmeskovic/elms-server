@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '../../entities/role.enum';
 import {
   IsArray,
@@ -9,21 +9,20 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class CreateUserDto {
-  @ApiProperty()
+export class UpdateUserDto {
+  @ApiPropertyOptional()
   @IsEmail(
     {},
     {
       message: 'Email must be a valid email address!',
     },
   )
-  readonly email: string;
-  @ApiProperty()
+  @IsOptional()
+  readonly email?: string;
+  @ApiPropertyOptional()
   @IsString()
-  readonly username: string;
-  @ApiProperty()
-  @IsString()
-  readonly password: string;
+  @IsOptional()
+  readonly password?: string;
   @ApiPropertyOptional({ enum: Role, isArray: true })
   @Transform((value: string | string[]) =>
     Array.isArray(value)

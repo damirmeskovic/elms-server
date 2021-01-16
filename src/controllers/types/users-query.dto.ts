@@ -1,6 +1,12 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Role } from 'src/entities/role.enum';
+import {
+  IsArray,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { Role } from '../../entities/role.enum';
 
 export class UsersQueryDto {
   @IsString()
@@ -9,7 +15,6 @@ export class UsersQueryDto {
   @IsString()
   @IsOptional()
   readonly name?: string;
-  @IsArray()
   @Transform((value: string | string[]) =>
     Array.isArray(value)
       ? value
@@ -17,6 +22,11 @@ export class UsersQueryDto {
       ? value.trim().split(',')
       : null,
   )
+  @IsArray()
+  @IsEnum(Role, {
+    each: true,
+    message: 'Each role must be one of allowed values: Admin, Librarian',
+  })
   @IsOptional()
   readonly roles?: Role[];
   @IsNumber()
