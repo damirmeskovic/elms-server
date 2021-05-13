@@ -2,15 +2,15 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
 import { UserDto } from '../../src/controllers/types/user.dto';
-import { Repository } from '../../src/use-cases/types/repository.types';
+import { UserRepository } from '../../src/persistence/user/user.repository';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { InMemoryRepository } from '../../src/repositories/in-memory.repository';
+import { InMemoryPersistence } from '../../src/persistence/in-memory.persistence';
 import { Role } from '../../src/entities/role.enum';
 
 describe('/api/users', () => {
   let app: INestApplication;
-  let inMemoryRepository: Repository;
+  let userRepository: UserRepository;
 
   const admin = {
     email: 'admin@email.com',
@@ -32,20 +32,20 @@ describe('/api/users', () => {
   };
 
   beforeEach(async () => {
-    inMemoryRepository = new InMemoryRepository();
+    userRepository = new UserRepository(new InMemoryPersistence());
 
-    inMemoryRepository.users.save({ ...admin, password: admin.username });
-    inMemoryRepository.users.save({
+    await userRepository.save({ ...admin, password: admin.username });
+    await userRepository.save({
       ...librarian,
       password: librarian.username,
     });
-    inMemoryRepository.users.save({ ...member, password: member.username });
+    await userRepository.save({ ...member, password: member.username });
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(Repository)
-      .useValue(inMemoryRepository)
+      .overrideProvider(UserRepository)
+      .useValue(userRepository)
       .compile();
 
     app = moduleFixture.createNestApplication();

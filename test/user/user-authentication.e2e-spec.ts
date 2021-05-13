@@ -2,24 +2,24 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
 import { UserDto } from '../../src/controllers/types/user.dto';
-import { Repository } from '../../src/use-cases/types/repository.types';
+import { UserRepository } from '../../src/persistence/user/user.repository';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { InMemoryRepository } from '../../src/repositories/in-memory.repository';
+import { InMemoryPersistence } from '../../src/persistence/in-memory.persistence';
 import { Role } from '../../src/entities/role.enum';
 
 describe('/api/user', () => {
   let app: INestApplication;
-  let inMemoryRepository: Repository;
+  let userRepository: UserRepository;
 
   beforeEach(async () => {
-    inMemoryRepository = new InMemoryRepository();
+    userRepository = new UserRepository(new InMemoryPersistence());
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(Repository)
-      .useValue(inMemoryRepository)
+      .overrideProvider(UserRepository)
+      .useValue(userRepository)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -44,8 +44,8 @@ describe('/api/user', () => {
       .expect(401);
   });
 
-  it('Login with incorrect credentials is unauthorized', () => {
-    inMemoryRepository.users.save({
+  it('Login with incorrect credentials is unauthorized', async () => {
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
@@ -61,8 +61,8 @@ describe('/api/user', () => {
       .expect(401);
   });
 
-  it('Logged in user is returned for correct credentials', () => {
-    inMemoryRepository.users.save({
+  it('Logged in user is returned for correct credentials', async () => {
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
@@ -94,7 +94,7 @@ describe('/api/user', () => {
   });
 
   it('Current user is returned if logged in', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',

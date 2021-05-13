@@ -1,21 +1,21 @@
 import { Role } from '../entities/role.enum';
-import { InMemoryRepository } from '../repositories/in-memory.repository';
+import { InMemoryPersistence } from '../persistence/in-memory.persistence';
 import { FindUser } from './find-user.use-case';
-import { Save } from './save.use-case';
-import { Repository } from './types/repository.types';
+import { SaveUser } from './save-user.use-case';
 import { Request, UpdateUser } from './update-user.use-case';
+import { UserRepository } from '../persistence/user/user.repository';
 
 describe('Update User', () => {
-  let inMemoryRepository: Repository;
+  let userRepository: UserRepository;
   let findUser: FindUser;
-  let save: Save;
+  let save: SaveUser;
 
   let updateUser: UpdateUser;
 
   beforeEach(async () => {
-    inMemoryRepository = new InMemoryRepository();
-    findUser = new FindUser(inMemoryRepository);
-    save = new Save(inMemoryRepository);
+    userRepository = new UserRepository(new InMemoryPersistence());
+    findUser = new FindUser(userRepository);
+    save = new SaveUser(userRepository);
 
     updateUser = new UpdateUser(findUser, save);
   });
@@ -37,13 +37,13 @@ describe('Update User', () => {
   });
 
   it('throws if user with requested email already exists', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
     });
 
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'member@email.com',
       username: 'member',
       password: 'member',
@@ -58,7 +58,7 @@ describe('Update User', () => {
   });
 
   it('saves and returns the updated user', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',

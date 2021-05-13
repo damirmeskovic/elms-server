@@ -1,23 +1,23 @@
 import { Role } from '../entities/role.enum';
-import { InMemoryRepository } from '../repositories/in-memory.repository';
+import { InMemoryPersistence } from '../persistence/in-memory.persistence';
 import { CreateUser, Request } from './create-user.use-case';
 import { FindUser } from './find-user.use-case';
-import { Save } from './save.use-case';
-import { Repository } from './types/repository.types';
+import { SaveUser } from './save-user.use-case';
+import { UserRepository } from '../persistence/user/user.repository';
 
 describe('Create User', () => {
-  let inMemoryRepository: Repository;
+  let userRepository: UserRepository;
   let findUser: FindUser;
-  let save: Save;
+  let saveUser: SaveUser;
 
   let createUser: CreateUser;
 
   beforeEach(async () => {
-    inMemoryRepository = new InMemoryRepository();
-    findUser = new FindUser(inMemoryRepository);
-    save = new Save(inMemoryRepository);
+    userRepository = new UserRepository(new InMemoryPersistence());
+    findUser = new FindUser(userRepository);
+    saveUser = new SaveUser(userRepository);
 
-    createUser = new CreateUser(findUser, save);
+    createUser = new CreateUser(findUser, saveUser);
   });
 
   it('throws if email is missing', async () => {
@@ -51,7 +51,7 @@ describe('Create User', () => {
   });
 
   it('throws if username is taken', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',
@@ -67,7 +67,7 @@ describe('Create User', () => {
   });
 
   it('throws if user with requested email already exists', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',

@@ -1,6 +1,6 @@
 import { Role } from 'src/entities/role.enum';
 import { User } from 'src/entities/user.entity';
-import { Repository } from './types/repository.types';
+import { UserRepository } from './types/repository.types';
 
 export interface Query {
   readonly email?: string;
@@ -19,9 +19,9 @@ export interface Result {
 }
 
 export class FindUsers {
-  constructor(private readonly repository: Repository) {}
+  constructor(private readonly users: UserRepository) {}
 
   async with(query: Query): Promise<Result> {
-    return this.repository.users.query(query);
+    return this.users.query(query);
   }
 }

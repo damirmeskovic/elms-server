@@ -5,21 +5,21 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
 import { UserDto } from '../../src/controllers/types/user.dto';
-import { InMemoryRepository } from '../../src/repositories/in-memory.repository';
-import { Repository } from '../../src/use-cases/types/repository.types';
+import { InMemoryPersistence } from '../../src/persistence/in-memory.persistence';
+import { UserRepository } from '../../src/persistence/user/user.repository';
 
 describe('/api/user', () => {
   let app: INestApplication;
-  let inMemoryRepository: Repository;
+  let userRepository: UserRepository;
 
   beforeEach(async () => {
-    inMemoryRepository = new InMemoryRepository();
+    userRepository = new UserRepository(new InMemoryPersistence());
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
-      .overrideProvider(Repository)
-      .useValue(inMemoryRepository)
+      .overrideProvider(UserRepository)
+      .useValue(userRepository)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -32,7 +32,7 @@ describe('/api/user', () => {
   });
 
   it('Create user is forbidden if logged in as librarian', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'librarian@email.com',
       username: 'librarian',
       password: 'librarian',
@@ -51,7 +51,7 @@ describe('/api/user', () => {
   });
 
   it('Create user is forbidden if logged in as member', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'member@email.com',
       username: 'member',
       password: 'member',
@@ -69,7 +69,7 @@ describe('/api/user', () => {
   });
 
   it('Create user is successful if logged in as admin', async () => {
-    inMemoryRepository.users.save({
+    await userRepository.save({
       email: 'admin@email.com',
       username: 'admin',
       password: 'admin',

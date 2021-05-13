@@ -1,17 +1,17 @@
-import { InMemoryRepository } from '../repositories/in-memory.repository';
+import { InMemoryPersistence } from '../persistence/in-memory.persistence';
 import { FindUser } from './find-user.use-case';
-import { Repository } from './types/repository.types';
 import { AuthenticateUser } from './authenticate-user.use-case';
+import { UserRepository } from '../persistence/user/user.repository';
 
 describe('Authenticate User', () => {
-  let inMemoryRepository: Repository;
+  let userRepository: UserRepository;
   let findUser: FindUser;
 
   let authenticateUser: AuthenticateUser;
 
   beforeEach(async () => {
-    inMemoryRepository = new InMemoryRepository();
-    findUser = new FindUser(inMemoryRepository);
+    userRepository = new UserRepository(new InMemoryPersistence());
+    findUser = new FindUser(userRepository);
 
     authenticateUser = new AuthenticateUser(findUser);
   });
@@ -43,14 +43,14 @@ describe('Authenticate User', () => {
     expect(user).toBeNull();
   });
 
-  it('returns null for incorect password', async () => {
+  it('returns null for incorrect password', async () => {
     const existingUser = {
       email: 'someone@email.com',
       username: 'someone',
       password: 'correctPassword',
     };
 
-    inMemoryRepository.users.save(existingUser);
+    await userRepository.save(existingUser);
 
     const user = await authenticateUser.withCredentials({
       username: 'damir',
@@ -67,7 +67,7 @@ describe('Authenticate User', () => {
       password: 'correctPassword',
     };
 
-    inMemoryRepository.users.save(existingUser);
+    await userRepository.save(existingUser);
 
     const user = await authenticateUser.withCredentials({
       username: existingUser.username,

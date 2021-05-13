@@ -1,7 +1,7 @@
 import { Role } from 'src/entities/role.enum';
 import { User } from 'src/entities/user.entity';
 import { FindUser } from './find-user.use-case';
-import { Save } from './save.use-case';
+import { SaveUser } from './save-user.use-case';
 
 export interface Request {
   email: string;
@@ -15,7 +15,7 @@ export interface Request {
 export class CreateUser {
   constructor(
     private readonly findUser: FindUser,
-    private readonly save: Save,
+    private readonly save: SaveUser,
   ) {}
 
   async withProperties(request: Request): Promise<User> {

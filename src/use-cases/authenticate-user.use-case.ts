@@ -7,10 +7,10 @@ export interface Credentials {
 }
 
 export class AuthenticateUser {
-  constructor(private readonly find: FindUser) {}
+  constructor(private readonly findUser: FindUser) {}
 
   async withCredentials(request: Credentials): Promise<User> {
-    const user = await this.find.withUsername(request.username);
+    const user = await this.findUser.withUsername(request.username);
     if (user && user.password === request.password) {
       return user;
     }

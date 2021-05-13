@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import adapters from './adapters.config';
+import repositories from './persistence.config';
 import { jwtConstants } from './authentication/constants';
 import { JwtTokenGenerator } from './authentication/jwt-token.generator';
 import { JwtStrategy } from './authentication/jwt.strategy';
@@ -25,7 +25,7 @@ import useCases from './use-cases.config';
     JwtStrategy,
     JwtTokenGenerator,
     RolesGuard,
-    ...adapters,
+    ...repositories,
     ...useCases,
   ],
 })

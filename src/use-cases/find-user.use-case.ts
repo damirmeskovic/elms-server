@@ -1,14 +1,14 @@
 import { User } from 'src/entities/user.entity';
-import { Repository } from './types/repository.types';
+import { UserRepository } from './types/repository.types';
 
 export class FindUser {
-  constructor(private readonly repository: Repository) {}
+  constructor(private readonly users: UserRepository) {}
 
   async withUsername(username: string): Promise<User> {
-    return await this.repository.users.find(username);
+    return await this.users.find(username);
   }
 
   async withEmail(email: string): Promise<User> {
-    return await this.repository.users.findByEmail(email);
+    return await this.users.findByEmail(email);
   }
 }
