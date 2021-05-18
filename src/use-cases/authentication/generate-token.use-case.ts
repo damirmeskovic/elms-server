@@ -1,5 +1,5 @@
-import { User } from '../entities/user.entity';
-import { TokenGenerator } from './types/token-generator.types';
+import { User } from '../../entities/user.entity';
+import { TokenGenerator } from './token-generator.types';
 
 export class GenerateToken {
   constructor(private readonly tokenGenerator: TokenGenerator) {}

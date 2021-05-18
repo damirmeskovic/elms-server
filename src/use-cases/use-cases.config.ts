@@ -1,13 +1,13 @@
-import { JwtTokenGenerator } from './authentication/jwt-token.generator';
-import { AuthenticateUser } from './use-cases/authenticate-user.use-case';
-import { CreateUser } from './use-cases/create-user.use-case';
-import { FindUser } from './use-cases/find-user.use-case';
-import { FindUsers } from './use-cases/find-users.use-case';
-import { GenerateToken } from './use-cases/generate-token.use-case';
-import { SaveUser } from './use-cases/save-user.use-case';
-import { TokenGenerator } from './use-cases/types/token-generator.types';
-import { UpdateUser } from './use-cases/update-user.use-case';
-import { UserRepository } from './use-cases/types/repository.types';
+import { JwtTokenGenerator } from '../authentication/jwt-token.generator';
+import { AuthenticateUser } from './user/authenticate-user.use-case';
+import { CreateUser } from './user/create-user.use-case';
+import { FindUser } from './user/find-user.use-case';
+import { FindUsers } from './user/find-users.use-case';
+import { GenerateToken } from './authentication/generate-token.use-case';
+import { SaveUser } from './user/save-user.use-case';
+import { TokenGenerator } from './authentication/token-generator.types';
+import { UpdateUser } from './user/update-user.use-case';
+import { UserRepository } from './user/user.repository';
 
 const generateToken = {
   provide: GenerateToken,

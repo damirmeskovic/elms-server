@@ -1,9 +1,9 @@
-import { Role } from '../entities/role.enum';
-import { InMemoryPersistence } from '../persistence/in-memory.persistence';
+import { Role } from '../../entities/role.enum';
+import { InMemoryPersistence } from '../../persistence/in-memory.persistence';
 import { CreateUser, Request } from './create-user.use-case';
 import { FindUser } from './find-user.use-case';
 import { SaveUser } from './save-user.use-case';
-import { UserRepository } from '../persistence/user/user.repository';
+import { UserRepository } from '../../persistence/user/user.repository';
 
 describe('Create User', () => {
   let userRepository: UserRepository;

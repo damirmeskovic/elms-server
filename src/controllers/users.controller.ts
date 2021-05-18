@@ -10,7 +10,7 @@ import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Roles } from '../authentication/roles.decorator';
 import { RolesGuard } from '../authentication/roles.guard';
 import { Role } from '../entities/role.enum';
-import { FindUsers } from '../use-cases/find-users.use-case';
+import { FindUsers } from '../use-cases/user/find-users.use-case';
 import { ApiPaginatedResponse } from './types/api-paginated-response';
 import { PaginatedDto } from './types/paginated.dto';
 import { UserProfileDto } from './types/user-profile.dto';

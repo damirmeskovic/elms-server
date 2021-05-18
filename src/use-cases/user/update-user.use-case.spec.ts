@@ -1,9 +1,9 @@
-import { Role } from '../entities/role.enum';
-import { InMemoryPersistence } from '../persistence/in-memory.persistence';
+import { Role } from '../../entities/role.enum';
+import { InMemoryPersistence } from '../../persistence/in-memory.persistence';
 import { FindUser } from './find-user.use-case';
 import { SaveUser } from './save-user.use-case';
 import { Request, UpdateUser } from './update-user.use-case';
-import { UserRepository } from '../persistence/user/user.repository';
+import { UserRepository } from '../../persistence/user/user.repository';
 
 describe('Update User', () => {
   let userRepository: UserRepository;

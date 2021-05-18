@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
-import { UserRepository as RepositoryInterface } from 'src/use-cases/types/repository.types';
+import { UserRepository as RepositoryInterface } from 'src/use-cases/user/user.repository';
 import {
   Query as UserQuery,
   Result as UserQueryResult,
-} from 'src/use-cases/find-users.use-case';
+} from 'src/use-cases/user/find-users.use-case';
 import { UserAssembler } from './user.assembler';
 import { Persistence } from '../persistence';
 import { UserRecord } from './user.record';

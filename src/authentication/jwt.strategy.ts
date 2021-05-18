@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { FindUser } from '../use-cases/find-user.use-case';
+import { FindUser } from '../use-cases/user/find-user.use-case';
 import { jwtConstants } from './constants';
 
 @Injectable()

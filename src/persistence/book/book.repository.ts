@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Book } from 'src/entities/book.entity';
-import { BookRepository as RepositoryInterface } from 'src/use-cases/types/repository.types';
 import {
   Query as BookQuery,
   Result as BookQueryResult,
-} from 'src/use-cases/find-books.use-case';
+} from 'src/use-cases/book/find-books.use-case';
 import { BookAssembler } from './book.assembler';
 import { Persistence } from '../persistence';
 import { BookRecord } from './book.record';
+import { BookRepository as RepositoryInterface } from '../../use-cases/book/book.repository';
 
 @Injectable()
 export class BookRepository implements RepositoryInterface {

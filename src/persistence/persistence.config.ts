@@ -1,11 +1,9 @@
-import { LocalJsonPersistence } from './persistence/local-json.persistence';
-import {
-  BookRepository,
-  UserRepository,
-} from './use-cases/types/repository.types';
-import { UserRepository as UserRepositoryImpl } from './persistence/user/user.repository';
-import { BookRepository as BookRepositoryImpl } from './persistence/book/book.repository';
-import { Persistence } from './persistence/persistence';
+import { LocalJsonPersistence } from './local-json.persistence';
+import { UserRepository } from '../use-cases/user/user.repository';
+import { UserRepository as UserRepositoryImpl } from './user/user.repository';
+import { BookRepository as BookRepositoryImpl } from './book/book.repository';
+import { Persistence } from './persistence';
+import { BookRepository } from '../use-cases/book/book.repository';
 
 const persistence = {
   provide: Persistence,

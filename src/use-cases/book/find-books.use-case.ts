@@ -1,5 +1,5 @@
 import { Book } from 'src/entities/book.entity';
-import { BookRepository } from './types/repository.types';
+import { BookRepository } from './book.repository';
 
 export interface Query {
   readonly identifier?: string;

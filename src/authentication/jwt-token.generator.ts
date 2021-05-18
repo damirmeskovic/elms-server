@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import {
   TokenGenerator,
   TokenPayload,
-} from 'src/use-cases/types/token-generator.types';
+} from 'src/use-cases/authentication/token-generator.types';
 
 @Injectable()
 export class JwtTokenGenerator implements TokenGenerator {
