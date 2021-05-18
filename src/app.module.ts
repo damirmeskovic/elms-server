@@ -7,9 +7,8 @@ import { JwtTokenGenerator } from './authentication/jwt-token.generator';
 import { JwtStrategy } from './authentication/jwt.strategy';
 import { LoginStrategy } from './authentication/login.strategy';
 import { RolesGuard } from './authentication/roles.guard';
-import { UserController } from './controllers/user.controller';
-import { UsersController } from './controllers/users.controller';
 import useCases from './use-cases/use-cases.config';
+import controllers from './controllers/controllers.config';
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import useCases from './use-cases/use-cases.config';
       signOptions: { expiresIn: '3600s' },
     }),
   ],
-  controllers: [UserController, UsersController],
+  controllers: [...controllers],
   providers: [
     LoginStrategy,
     JwtStrategy,

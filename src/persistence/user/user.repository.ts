@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { UserRepository as RepositoryInterface } from 'src/use-cases/user/user.repository';
-import {
-  Query as UserQuery,
-  Result as UserQueryResult,
-} from 'src/use-cases/user/find-users.use-case';
+import { Query, Result } from 'src/use-cases/user/find-users.use-case';
 import { UserAssembler } from './user.assembler';
 import { Persistence } from '../persistence';
 import { UserRecord } from './user.record';
@@ -16,26 +13,19 @@ export class UserRepository implements RepositoryInterface {
     this.assembler = new UserAssembler(persistence);
   }
 
-  async save(user: User): Promise<User> {
-    return this.assembler
+  save = async (user: User): Promise<User> =>
+    this.assembler
       .flatten(user)
       .then(this.persistence.persist)
       .then(this.assembler.assemble);
-  }
 
-  async find(username: string): Promise<User> {
-    return this.persistence
-      .load('user', username)
-      .then(this.assembler.assemble);
-  }
+  find = async (username: string): Promise<User> =>
+    this.persistence.load('user', username).then(this.assembler.assemble);
 
-  async findByEmail(email: string): Promise<User> {
-    return this.persistence
-      .load('user', email, 'email')
-      .then(this.assembler.assemble);
-  }
+  findByEmail = async (email: string): Promise<User> =>
+    this.persistence.load('user', email, 'email').then(this.assembler.assemble);
 
-  async query(query: UserQuery): Promise<UserQueryResult> {
+  query = async (query: Query): Promise<Result> => {
     const offset = query.offset || 0;
     const limit = query.limit || 100;
     const users = await this.persistence
@@ -81,5 +71,5 @@ export class UserRepository implements RepositoryInterface {
       offset: offset,
       users: users.slice(offset, offset + limit),
     };
-  }
+  };
 }

@@ -17,7 +17,7 @@ export class BooksQueryDto {
   )
   @IsArray()
   @IsOptional()
-  readonly authors?: string[];
+  readonly authorIdentifiers?: string[];
   @IsString()
   @IsOptional()
   readonly description?: string;
@@ -30,7 +30,7 @@ export class BooksQueryDto {
   )
   @IsArray()
   @IsOptional()
-  readonly tags?: string[];
+  readonly tagIdentifiers?: string[];
   @IsNumber()
   @IsOptional()
   readonly limit?: number;

@@ -6,7 +6,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { FindBooks } from 'src/use-cases/book/find-books.use-case';
+import { FindBooks } from '../use-cases/book/find-books.use-case';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Roles } from '../authentication/roles.decorator';
 import { RolesGuard } from '../authentication/roles.guard';
@@ -47,7 +47,7 @@ export class BooksController {
   @ApiQuery({ name: 'limit', required: false, type: 'number' })
   @ApiQuery({ name: 'offset', required: false, type: 'number' })
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin, Role.Librarian)
+  @Roles(Role.Admin)
   @Get()
   async find(@Query() query: BooksQueryDto): Promise<PaginatedDto<BookDto>> {
     const result = await this.findBooks.with({ ...query });

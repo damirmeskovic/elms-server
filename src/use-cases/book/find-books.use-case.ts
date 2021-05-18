@@ -4,9 +4,9 @@ import { BookRepository } from './book.repository';
 export interface Query {
   readonly identifier?: string;
   readonly title?: string;
-  readonly authors?: string[];
+  readonly authorIdentifiers?: string[];
   readonly description?: string;
-  readonly tags?: string[];
+  readonly tagIdentifiers?: string[];
   readonly limit?: number;
   readonly offset?: number;
 }

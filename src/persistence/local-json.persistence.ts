@@ -18,23 +18,25 @@ export class LocalJsonPersistence extends Persistence {
   constructor() {
     super();
     this.db = new JsonDB(new Config('elms-database', true, true, '/'));
-    if (this.db.exists('/users')) {
-      return;
+    if (!this.db.exists('/users')) {
+      // deafult 'admin/admin' user
+      this.db.push(
+        '/users[]',
+        this.versionOf({
+          _typeName: 'user',
+          _identifierProperty: 'username',
+          email: 'admin@email.com',
+          username: 'admin',
+          password: 'admin',
+          roles: [Role.Admin],
+          name: 'Admin McAdminface',
+          bio: 'I am the administrator!',
+        }),
+      );
     }
-    // deafult 'admin/admin' user
-    this.db.push(
-      `${this.typeCollections.user}[]`,
-      this.versionOf({
-        _typeName: 'user',
-        _identifierProperty: 'username',
-        email: 'admin@email.com',
-        username: 'admin',
-        password: 'admin',
-        roles: [Role.Admin],
-        name: 'Admin McAdminface',
-        bio: 'I am the administrator!',
-      }),
-    );
+    if (!this.db.exists('/books')) {
+      this.db.push('/books', []);
+    }
   }
 
   load = (

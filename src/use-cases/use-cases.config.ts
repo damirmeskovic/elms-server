@@ -8,6 +8,8 @@ import { SaveUser } from './user/save-user.use-case';
 import { TokenGenerator } from './authentication/token-generator.types';
 import { UpdateUser } from './user/update-user.use-case';
 import { UserRepository } from './user/user.repository';
+import { FindBooks } from './book/find-books.use-case';
+import { BookRepository } from './book/book.repository';
 
 const generateToken = {
   provide: GenerateToken,
@@ -54,6 +56,12 @@ const findUsers = {
   inject: [UserRepository],
 };
 
+const findBooks = {
+  provide: FindBooks,
+  useFactory: (repository: BookRepository) => new FindBooks(repository),
+  inject: [BookRepository],
+};
+
 export default [
   generateToken,
   findUser,
@@ -62,4 +70,5 @@ export default [
   createUser,
   updateUser,
   findUsers,
+  findBooks,
 ];

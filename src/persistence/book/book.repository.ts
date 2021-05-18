@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Book } from 'src/entities/book.entity';
-import {
-  Query as BookQuery,
-  Result as BookQueryResult,
-} from 'src/use-cases/book/find-books.use-case';
+import { Query, Result } from 'src/use-cases/book/find-books.use-case';
 import { BookAssembler } from './book.assembler';
 import { Persistence } from '../persistence';
 import { BookRecord } from './book.record';
@@ -16,61 +13,58 @@ export class BookRepository implements RepositoryInterface {
     this.assembler = new BookAssembler(persistence);
   }
 
-  async save(book: Book): Promise<Book> {
-    return this.assembler
+  save = async (book: Book): Promise<Book> =>
+    this.assembler
       .flatten(book)
       .then(this.persistence.persist)
       .then(this.assembler.assemble);
-  }
 
-  async find(bookname: string): Promise<Book> {
-    return this.persistence
-      .load('book', bookname)
-      .then(this.assembler.assemble);
-  }
+  find = async (bookname: string): Promise<Book> =>
+    this.persistence.load('book', bookname).then(this.assembler.assemble);
 
-  async findByEmail(email: string): Promise<Book> {
-    return this.persistence
-      .load('book', email, 'email')
-      .then(this.assembler.assemble);
-  }
-
-  async query(query: BookQuery): Promise<BookQueryResult> {
+  query = async (query: Query): Promise<Result> => {
     const offset = query.offset || 0;
     const limit = query.limit || 100;
     const books = await this.persistence
       .loadAll('book')
-      .then(
-        (records) => records.map((record) => record as BookRecord),
-        // .filter(
-        //   (bookRecord) =>
-        //     !query.email ||
-        //     bookRecord.email
-        //       .toLocaleLowerCase()
-        //       .includes(query.email.toLocaleLowerCase()),
-        // )
-        // .filter(
-        //   (bookRecord) =>
-        //     !query.bookname ||
-        //     bookRecord.bookname
-        //       .toLocaleLowerCase()
-        //       .includes(query.bookname.toLocaleLowerCase()),
-        // )
-        // .filter(
-        //   (bookRecord) =>
-        //     !query.name ||
-        //     (bookRecord.name &&
-        //       bookRecord.name
-        //         .toLocaleLowerCase()
-        //         .includes(query.name.toLocaleLowerCase())),
-        // )
-        // .filter(
-        //   (bookRecord) =>
-        //     !query.roles ||
-        //     query.roles.every(
-        //       (role) => bookRecord.roles && bookRecord.roles.includes(role),
-        //     ),
-        // ),
+      .then((records) =>
+        records
+          .map((record) => record as BookRecord)
+          .filter(
+            (record) =>
+              !query.identifier || record.identifier === query.identifier,
+          )
+          .filter(
+            (record) =>
+              !query.title ||
+              record.title
+                .toLocaleLowerCase()
+                .includes(query.title.toLocaleLowerCase()),
+          )
+          .filter(
+            (record) =>
+              !query.description ||
+              (record.description &&
+                record.description
+                  .toLocaleLowerCase()
+                  .includes(query.description.toLocaleLowerCase())),
+          )
+          .filter(
+            (record) =>
+              !query.authorIdentifiers ||
+              query.authorIdentifiers.every((authorIdentifier) =>
+                record.authorIdentifiers.includes(authorIdentifier),
+              ),
+          )
+          .filter(
+            (record) =>
+              !query.tagIdentifiers ||
+              query.tagIdentifiers.every(
+                (tagIdentifier) =>
+                  record.tagIdentifiers &&
+                  record.tagIdentifiers.includes(tagIdentifier),
+              ),
+          ),
       )
       .then(this.assembler.assembleAll);
 
@@ -80,5 +74,5 @@ export class BookRepository implements RepositoryInterface {
       offset: offset,
       books: books.slice(offset, offset + limit),
     };
-  }
+  };
 }

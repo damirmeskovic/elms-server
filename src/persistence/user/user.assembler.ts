@@ -8,17 +8,16 @@ export class UserAssembler extends RecordAssembler<UserRecord, User> {
     super();
   }
 
-  assemble(record: UserRecord): Promise<User> {
+  assemble = (record: UserRecord): Promise<User> => {
     if (record === null) return Promise.resolve(null);
     const { _typeName, _identifierProperty, ...user } = record;
     return Promise.resolve(user);
-  }
+  };
 
-  flatten(user: User): Promise<UserRecord> {
-    return Promise.resolve({
+  flatten = (user: User): Promise<UserRecord> =>
+    Promise.resolve({
       _typeName: 'user',
       _identifierProperty: 'username',
       ...user,
     });
-  }
 }

@@ -1,4 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { TagDto } from './tag.dto';
 
 export class AuthorDto {
@@ -10,6 +14,9 @@ export class AuthorDto {
   readonly country: string;
   @ApiPropertyOptional()
   readonly bio?: string;
-  @ApiPropertyOptional({ type: 'TagDto', isArray: true })
+  @ApiPropertyOptional({
+    type: 'array',
+    items: { $ref: getSchemaPath(TagDto) },
+  })
   readonly tags?: TagDto[];
 }
