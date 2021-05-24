@@ -164,7 +164,7 @@ describe('/api/users', () => {
       });
   });
 
-  it('Username and name are matched partialy and case insensitive', async () => {
+  it('Username and name are matched partially and case insensitive', async () => {
     const loggedInUser = await login({
       username: admin.username,
       password: admin.username,
