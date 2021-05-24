@@ -6,15 +6,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { FindAuthors } from '../use-cases/author/find-authors.use-case';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { Roles } from '../authentication/roles.decorator';
-import { RolesGuard } from '../authentication/roles.guard';
-import { Role } from '../entities/role.enum';
-import { ApiPaginatedResponse } from './types/api-paginated-response';
-import { AuthorDto } from './types/author.dto';
-import { PaginatedDto } from './types/paginated.dto';
-import { AuthorsQueryDto } from './types/authors-query.dto';
+import { FindAuthors } from '../../use-cases/author/find-authors.use-case';
+import { JwtAuthGuard } from '../../authentication/jwt-auth.guard';
+import { Roles } from '../../authentication/roles.decorator';
+import { RolesGuard } from '../../authentication/roles.guard';
+import { Role } from '../../entities/role.enum';
+import { ApiPaginatedResponse } from '../api-paginated-response';
+import { AuthorDto } from './author.dto';
+import { PaginatedDto } from '../paginated.dto';
+import { AuthorsQueryDto } from './authors-query.dto';
 
 @ApiTags('authors')
 @Controller('authors')
@@ -28,17 +28,11 @@ export class AuthorsController {
     description: 'User does not have necessary permissions.',
   })
   @ApiQuery({ name: 'identifier', required: false, type: 'string' })
-  @ApiQuery({ name: 'title', required: false, type: 'string' })
+  @ApiQuery({ name: 'name', required: false, type: 'string' })
+  @ApiQuery({ name: 'country', required: false, type: 'string' })
+  @ApiQuery({ name: 'bio', required: false, type: 'string' })
   @ApiQuery({
-    name: 'authors',
-    type: 'string',
-    isArray: true,
-    required: false,
-    explode: true,
-  })
-  @ApiQuery({ name: 'description', required: false, type: 'string' })
-  @ApiQuery({
-    name: 'tags',
+    name: 'tagIdentifiers',
     type: 'string',
     isArray: true,
     required: false,

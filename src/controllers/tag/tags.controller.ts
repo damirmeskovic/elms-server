@@ -6,15 +6,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { FindTags } from '../use-cases/tag/find-tags.use-case';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { Roles } from '../authentication/roles.decorator';
-import { RolesGuard } from '../authentication/roles.guard';
-import { Role } from '../entities/role.enum';
-import { ApiPaginatedResponse } from './types/api-paginated-response';
-import { TagDto } from './types/tag.dto';
-import { PaginatedDto } from './types/paginated.dto';
-import { TagsQueryDto } from './types/tags-query.dto';
+import { FindTags } from '../../use-cases/tag/find-tags.use-case';
+import { JwtAuthGuard } from '../../authentication/jwt-auth.guard';
+import { Roles } from '../../authentication/roles.decorator';
+import { RolesGuard } from '../../authentication/roles.guard';
+import { Role } from '../../entities/role.enum';
+import { ApiPaginatedResponse } from '../api-paginated-response';
+import { TagDto } from './tag.dto';
+import { PaginatedDto } from '../paginated.dto';
+import { TagsQueryDto } from './tags-query.dto';
 
 @ApiTags('tags')
 @Controller('tags')

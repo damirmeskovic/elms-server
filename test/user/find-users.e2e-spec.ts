@@ -1,7 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
-import { UserDto } from '../../src/controllers/types/user.dto';
+import { CredentialsDto } from '../../src/controllers/credentials.dto';
+import { UserDto } from '../../src/controllers/user/user.dto';
 import { UserRepository } from '../../src/persistence/user/user.repository';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';

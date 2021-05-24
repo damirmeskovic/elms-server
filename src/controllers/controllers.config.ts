@@ -1,8 +1,8 @@
-import { BooksController } from './books.controller';
-import { UserController } from './user.controller';
-import { UsersController } from './users.controller';
-import { AuthorsController } from './authors.controller';
-import { TagsController } from './tags.controller';
+import { BooksController } from './book/books.controller';
+import { UserController } from './user/user.controller';
+import { UsersController } from './user/users.controller';
+import { AuthorsController } from './author/authors.controller';
+import { TagsController } from './tag/tags.controller';
 
 export default [
   AuthorsController,

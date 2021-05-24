@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Role } from '../../src/entities/role.enum';
 import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
-import { CredentialsDto } from '../../src/controllers/types/credentials.dto';
-import { UserDto } from '../../src/controllers/types/user.dto';
+import { CredentialsDto } from '../../src/controllers/credentials.dto';
+import { UserDto } from '../../src/controllers/user/user.dto';
 import { InMemoryPersistence } from '../../src/persistence/in-memory.persistence';
 import { UserRepository } from '../../src/persistence/user/user.repository';
 

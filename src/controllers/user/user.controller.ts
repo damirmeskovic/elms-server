@@ -20,19 +20,19 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { LoginAuthGuard } from '../authentication/login.guard';
-import { Roles } from '../authentication/roles.decorator';
-import { RolesGuard } from '../authentication/roles.guard';
-import { Role } from '../entities/role.enum';
-import { CreateUser } from '../use-cases/user/create-user.use-case';
-import { GenerateToken } from '../use-cases/authentication/generate-token.use-case';
-import { UpdateUser } from '../use-cases/user/update-user.use-case';
-import { CreateUserDto } from './types/create-user.dto';
-import { CredentialsDto } from './types/credentials.dto';
-import { UpdateUserDto } from './types/update-user.dto';
-import { UserProfileDto } from './types/user-profile.dto';
-import { UserDto } from './types/user.dto';
+import { JwtAuthGuard } from '../../authentication/jwt-auth.guard';
+import { LoginAuthGuard } from '../../authentication/login.guard';
+import { Roles } from '../../authentication/roles.decorator';
+import { RolesGuard } from '../../authentication/roles.guard';
+import { Role } from '../../entities/role.enum';
+import { CreateUser } from '../../use-cases/user/create-user.use-case';
+import { GenerateToken } from '../../use-cases/authentication/generate-token.use-case';
+import { UpdateUser } from '../../use-cases/user/update-user.use-case';
+import { CreateUserDto } from './create-user.dto';
+import { CredentialsDto } from '../credentials.dto';
+import { UpdateUserDto } from './update-user.dto';
+import { UserProfileDto } from './user-profile.dto';
+import { UserDto } from './user.dto';
 
 @ApiTags('user')
 @Controller('user')

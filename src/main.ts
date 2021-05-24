@@ -2,9 +2,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { TagDto } from './controllers/types/tag.dto';
-import { AuthorDto } from './controllers/types/author.dto';
-import { BookDto } from './controllers/types/book.dto';
+import { TagDto } from './controllers/tag/tag.dto';
+import { AuthorDto } from './controllers/author/author.dto';
+import { BookDto } from './controllers/book/book.dto';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

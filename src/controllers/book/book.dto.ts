@@ -3,8 +3,8 @@ import {
   ApiPropertyOptional,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { AuthorDto } from './author.dto';
-import { TagDto } from './tag.dto';
+import { AuthorDto } from '../author/author.dto';
+import { TagDto } from '../tag/tag.dto';
 
 export class BookDto {
   @ApiProperty()

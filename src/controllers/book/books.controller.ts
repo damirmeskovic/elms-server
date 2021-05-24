@@ -6,15 +6,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { FindBooks } from '../use-cases/book/find-books.use-case';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { Roles } from '../authentication/roles.decorator';
-import { RolesGuard } from '../authentication/roles.guard';
-import { Role } from '../entities/role.enum';
-import { ApiPaginatedResponse } from './types/api-paginated-response';
-import { BookDto } from './types/book.dto';
-import { BooksQueryDto } from './types/books-query.dto';
-import { PaginatedDto } from './types/paginated.dto';
+import { FindBooks } from '../../use-cases/book/find-books.use-case';
+import { JwtAuthGuard } from '../../authentication/jwt-auth.guard';
+import { Roles } from '../../authentication/roles.decorator';
+import { RolesGuard } from '../../authentication/roles.guard';
+import { Role } from '../../entities/role.enum';
+import { ApiPaginatedResponse } from '../api-paginated-response';
+import { BookDto } from './book.dto';
+import { BooksQueryDto } from './books-query.dto';
+import { PaginatedDto } from '../paginated.dto';
 
 @ApiTags('books')
 @Controller('books')
@@ -30,7 +30,7 @@ export class BooksController {
   @ApiQuery({ name: 'identifier', required: false, type: 'string' })
   @ApiQuery({ name: 'title', required: false, type: 'string' })
   @ApiQuery({
-    name: 'authors',
+    name: 'authorIdentifiers',
     type: 'string',
     isArray: true,
     required: false,
@@ -38,7 +38,7 @@ export class BooksController {
   })
   @ApiQuery({ name: 'description', required: false, type: 'string' })
   @ApiQuery({
-    name: 'tags',
+    name: 'tagIdentifiers',
     type: 'string',
     isArray: true,
     required: false,

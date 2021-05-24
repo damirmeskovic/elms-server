@@ -6,15 +6,15 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { Roles } from '../authentication/roles.decorator';
-import { RolesGuard } from '../authentication/roles.guard';
-import { Role } from '../entities/role.enum';
-import { FindUsers } from '../use-cases/user/find-users.use-case';
-import { ApiPaginatedResponse } from './types/api-paginated-response';
-import { PaginatedDto } from './types/paginated.dto';
-import { UserProfileDto } from './types/user-profile.dto';
-import { UsersQueryDto } from './types/users-query.dto';
+import { JwtAuthGuard } from '../../authentication/jwt-auth.guard';
+import { Roles } from '../../authentication/roles.decorator';
+import { RolesGuard } from '../../authentication/roles.guard';
+import { Role } from '../../entities/role.enum';
+import { FindUsers } from '../../use-cases/user/find-users.use-case';
+import { ApiPaginatedResponse } from '../api-paginated-response';
+import { PaginatedDto } from '../paginated.dto';
+import { UserProfileDto } from './user-profile.dto';
+import { UsersQueryDto } from './users-query.dto';
 
 @ApiTags('users')
 @Controller('users')
