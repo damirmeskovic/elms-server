@@ -26,8 +26,8 @@ export class UserRepository implements RepositoryInterface {
     this.persistence.load('user', email, 'email').then(this.assembler.assemble);
 
   query = async (query: Query): Promise<Result> => {
-    const offset = query.offset || 0;
-    const limit = query.limit || 100;
+    const offset = query?.offset || 0;
+    const limit = query?.limit || 100;
     const users = await this.persistence
       .loadAll('user')
       .then((records) =>
@@ -35,21 +35,21 @@ export class UserRepository implements RepositoryInterface {
           .map((record) => record as UserRecord)
           .filter(
             (userRecord) =>
-              !query.email ||
+              !query?.email ||
               userRecord.email
                 .toLocaleLowerCase()
                 .includes(query.email.toLocaleLowerCase()),
           )
           .filter(
             (userRecord) =>
-              !query.username ||
+              !query?.username ||
               userRecord.username
                 .toLocaleLowerCase()
                 .includes(query.username.toLocaleLowerCase()),
           )
           .filter(
             (userRecord) =>
-              !query.name ||
+              !query?.name ||
               (userRecord.name &&
                 userRecord.name
                   .toLocaleLowerCase()
@@ -57,7 +57,7 @@ export class UserRepository implements RepositoryInterface {
           )
           .filter(
             (userRecord) =>
-              !query.roles ||
+              !query?.roles ||
               query.roles.every(
                 (role) => userRecord.roles && userRecord.roles.includes(role),
               ),

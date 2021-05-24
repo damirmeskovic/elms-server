@@ -23,27 +23,29 @@ describe('Find User', () => {
     findUser = new FindUser(userRepository);
   });
 
-  it('finds nothing for unknown username', () => {
-    expect(findUser.withUsername('something')).resolves.toBeNull();
+  it('finds nothing for unknown username', async () => {
+    await expect(findUser.withUsername('something')).resolves.toBeNull();
   });
 
-  it('finds nothing for partial username', () => {
-    expect(findUser.withUsername('admi')).resolves.toBeNull();
+  it('finds nothing for partial username', async () => {
+    await expect(findUser.withUsername('admi')).resolves.toBeNull();
   });
 
-  it('finds existing user for exact username', () => {
-    expect(findUser.withUsername(admin.username)).resolves.toStrictEqual(admin);
+  it('finds existing user for exact username', async () => {
+    await expect(findUser.withUsername(admin.username)).resolves.toStrictEqual(
+      admin,
+    );
   });
 
-  it('finds nothing for unknown email', () => {
-    expect(findUser.withUsername('some@email.com')).resolves.toBeNull();
+  it('finds nothing for unknown email', async () => {
+    await expect(findUser.withUsername('some@email.com')).resolves.toBeNull();
   });
 
-  it('finds nothing for partial email', () => {
-    expect(findUser.withUsername('admin@email')).resolves.toBeNull();
+  it('finds nothing for partial email', async () => {
+    await expect(findUser.withUsername('admin@email')).resolves.toBeNull();
   });
 
-  it('finds existing user for exact email', () => {
-    expect(findUser.withEmail(admin.email)).resolves.toStrictEqual(admin);
+  it('finds existing user for exact email', async () => {
+    await expect(findUser.withEmail(admin.email)).resolves.toStrictEqual(admin);
   });
 });

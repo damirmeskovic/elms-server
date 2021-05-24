@@ -103,7 +103,7 @@ describe('/api/users', () => {
       });
   });
 
-  it('Limit and offset are applied', async () => {
+  it('Query is applied correctly', async () => {
     const loggedInUser = await login({
       username: admin.username,
       password: admin.username,
@@ -112,75 +112,17 @@ describe('/api/users', () => {
     return request(app.getHttpServer())
       .get('/api/users')
       .query({
-        offset: 1,
-        limit: 1,
-      })
-      .set('Authorization', 'Bearer ' + loggedInUser.token)
-      .expect(200, {
-        total: 3,
-        offset: 1,
-        limit: 1,
-        items: [librarian],
-      });
-  });
-
-  it('Roles are matched', async () => {
-    const loggedInUser = await login({
-      username: admin.username,
-      password: admin.username,
-    });
-
-    return request(app.getHttpServer())
-      .get('/api/users')
-      .query({
+        offset: 0,
+        limit: 2,
+        email: '@',
+        name: 'MC',
         roles: ['Admin'],
       })
       .set('Authorization', 'Bearer ' + loggedInUser.token)
       .expect(200, {
         total: 1,
         offset: 0,
-        limit: 100,
-        items: [admin],
-      });
-  });
-
-  it('Email is matched partialy and case insensitive', async () => {
-    const loggedInUser = await login({
-      username: admin.username,
-      password: admin.username,
-    });
-
-    return request(app.getHttpServer())
-      .get('/api/users')
-      .query({
-        email: '.NET',
-      })
-      .set('Authorization', 'Bearer ' + loggedInUser.token)
-      .expect(200, {
-        total: 2,
-        offset: 0,
-        limit: 100,
-        items: [librarian, member],
-      });
-  });
-
-  it('Username and name are matched partially and case insensitive', async () => {
-    const loggedInUser = await login({
-      username: admin.username,
-      password: admin.username,
-    });
-
-    return request(app.getHttpServer())
-      .get('/api/users')
-      .query({
-        username: 'N',
-        name: 'MC',
-      })
-      .set('Authorization', 'Bearer ' + loggedInUser.token)
-      .expect(200, {
-        total: 1,
-        offset: 0,
-        limit: 100,
+        limit: 2,
         items: [admin],
       });
   });
