@@ -1,63 +1,53 @@
-import { UserRepository } from '../../persistence/user/user.repository';
+import { TagRepository } from '../../persistence/tag/tag.repository';
 import { InMemoryPersistence } from '../../persistence/in-memory.persistence';
-import { Role } from '../../entities/role.enum';
-import { FindUsers } from './find-users.use-case';
+import { FindTags } from './find-tags.use-case';
+import { Tag } from '../../entities/tag.entity';
 
-describe('Find Users', () => {
-  let userRepository: UserRepository;
+describe('Find Tags', () => {
+  let tagRepository: TagRepository;
 
-  let findUsers: FindUsers;
+  let findTags: FindTags;
 
-  const admin = {
-    email: 'admin@email.com',
-    username: 'admin',
-    password: 'admin',
-    name: 'Admin McAdminface',
-    roles: [Role.Admin],
+  const blue: Tag = {
+    identifier: 'blue',
+    name: 'Blue',
+    description: 'Everything related to the color blue!',
   };
 
-  const librarian = {
-    email: 'librarian@email.net',
-    username: 'librarian',
-    password: 'librarian',
-    roles: [Role.Librarian],
-  };
-
-  const member = {
-    email: 'member@email.net',
-    username: 'member',
-    password: 'member',
-    name: 'Member McMemberface',
+  const happy: Tag = {
+    identifier: 'happy',
+    name: 'Happy Tag',
+    description: 'The happy tag related stuff!',
   };
 
   beforeEach(async () => {
-    userRepository = new UserRepository(new InMemoryPersistence());
+    tagRepository = new TagRepository(new InMemoryPersistence());
 
-    await Promise.all([admin, member, librarian].map(userRepository.save));
+    await Promise.all([blue, happy].map(tagRepository.save));
 
-    findUsers = new FindUsers(userRepository);
+    findTags = new FindTags(tagRepository);
   });
 
-  it('finds all users for null query', async () => {
+  it('finds all tags for null query', async () => {
     const expectedResult = {
-      total: 3,
+      total: 2,
       limit: 100,
       offset: 0,
-      users: jasmine.arrayContaining([admin, librarian, member]),
+      tags: jasmine.arrayContaining([blue, happy]),
     };
 
-    await expect(findUsers.with(null)).resolves.toStrictEqual(expectedResult);
+    await expect(findTags.with(null)).resolves.toStrictEqual(expectedResult);
   });
 
-  it('finds all users for empty query', async () => {
+  it('finds all tags for empty query', async () => {
     const expectedResult = {
-      total: 3,
+      total: 2,
       limit: 100,
       offset: 0,
-      users: jasmine.arrayContaining([admin, librarian, member]),
+      tags: jasmine.arrayContaining([happy, blue]),
     };
 
-    await expect(findUsers.with({})).resolves.toStrictEqual(expectedResult);
+    await expect(findTags.with({})).resolves.toStrictEqual(expectedResult);
   });
 
   it('applies limit and offset', async () => {
@@ -67,87 +57,42 @@ describe('Find Users', () => {
     };
 
     const expectedResult = {
-      total: 3,
+      total: 2,
       limit: 1,
       offset: 1,
-      users: jasmine.arrayContaining([member]),
+      tags: jasmine.arrayContaining([happy]),
     };
 
-    await expect(findUsers.with(query)).resolves.toStrictEqual(expectedResult);
+    await expect(findTags.with(query)).resolves.toStrictEqual(expectedResult);
   });
 
-  it('finds users with matching roles', async () => {
+  it('finds tags with partially and case-insensitive matching name', async () => {
     const query = {
-      roles: [Role.Admin],
+      name: 'happy',
     };
 
     const expectedResult = {
       total: 1,
       limit: 100,
       offset: 0,
-      users: jasmine.arrayContaining([admin]),
+      tags: jasmine.arrayContaining([happy]),
     };
 
-    await expect(findUsers.with(query)).resolves.toStrictEqual(expectedResult);
+    await expect(findTags.with(query)).resolves.toStrictEqual(expectedResult);
   });
 
-  it('finds nothing if no users with all matching roles', async () => {
+  it('finds tags with partially and case-insensitive matching description', async () => {
     const query = {
-      roles: [Role.Admin, Role.Librarian],
-    };
-
-    const expectedResult = {
-      total: 0,
-      limit: 100,
-      offset: 0,
-      users: [],
-    };
-
-    await expect(findUsers.with(query)).resolves.toStrictEqual(expectedResult);
-  });
-
-  it('finds users with partially and case-insensitive matching emails', async () => {
-    const query = {
-      email: '.NET',
+      description: 'related',
     };
 
     const expectedResult = {
       total: 2,
       limit: 100,
       offset: 0,
-      users: jasmine.arrayContaining([member, librarian]),
+      tags: jasmine.arrayContaining([happy]),
     };
 
-    await expect(findUsers.with(query)).resolves.toStrictEqual(expectedResult);
-  });
-
-  it('finds users with partially and case-insensitive matching username', async () => {
-    const query = {
-      username: 'lib',
-    };
-
-    const expectedResult = {
-      total: 1,
-      limit: 100,
-      offset: 0,
-      users: jasmine.arrayContaining([librarian]),
-    };
-
-    await expect(findUsers.with(query)).resolves.toStrictEqual(expectedResult);
-  });
-
-  it('finds users with partially and case-insensitive matching name', async () => {
-    const query = {
-      name: 'mc',
-    };
-
-    const expectedResult = {
-      total: 2,
-      limit: 100,
-      offset: 0,
-      users: jasmine.arrayContaining([admin, member]),
-    };
-
-    await expect(findUsers.with(query)).resolves.toStrictEqual(expectedResult);
+    await expect(findTags.with(query)).resolves.toStrictEqual(expectedResult);
   });
 });

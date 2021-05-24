@@ -11,7 +11,7 @@ export class TagRepository implements RepositoryInterface {
   private readonly assembler: TagAssembler;
 
   constructor(private readonly persistence: Persistence) {
-    this.assembler = new TagAssembler(persistence);
+    this.assembler = new TagAssembler();
   }
 
   save = async (tag: Tag): Promise<Tag> =>
@@ -24,8 +24,8 @@ export class TagRepository implements RepositoryInterface {
     this.persistence.load('tag', tagname).then(this.assembler.assemble);
 
   query = async (query: Query): Promise<Result> => {
-    const offset = query.offset || 0;
-    const limit = query.limit || 100;
+    const offset = query?.offset || 0;
+    const limit = query?.limit || 100;
     const tags = await this.persistence
       .loadAll('tag')
       .then((records) =>
@@ -33,18 +33,18 @@ export class TagRepository implements RepositoryInterface {
           .map((record) => record as TagRecord)
           .filter(
             (record) =>
-              !query.identifier || record.identifier === query.identifier,
+              !query?.identifier || record.identifier === query.identifier,
           )
           .filter(
             (record) =>
-              !query.name ||
+              !query?.name ||
               record.name
                 .toLocaleLowerCase()
                 .includes(query.name.toLocaleLowerCase()),
           )
           .filter(
             (record) =>
-              !query.description ||
+              !query?.description ||
               (record.description &&
                 record.description
                   .toLocaleLowerCase()

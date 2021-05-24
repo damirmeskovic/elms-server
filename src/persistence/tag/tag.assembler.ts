@@ -1,18 +1,18 @@
 import { Tag } from 'src/entities/tag.entity';
 import { RecordAssembler } from '../record.assembler';
 import { TagRecord } from './tag.record';
-import { Persistence } from '../persistence';
 
 export class TagAssembler extends RecordAssembler<TagRecord, Tag> {
-  constructor(private readonly persistence: Persistence) {
-    super();
-  }
-
   assemble(record: TagRecord): Promise<Tag> {
-    throw new Error('Method not implemented.');
+    if (record === null) return Promise.resolve(null);
+    const { _typeName, _identifierProperty, ...tag } = record;
+    return Promise.resolve(tag);
   }
 
-  flatten(type: Tag): Promise<TagRecord> {
-    throw new Error('Method not implemented.');
-  }
+  flatten = (tag: Tag): Promise<TagRecord> =>
+    Promise.resolve({
+      _typeName: 'tag',
+      _identifierProperty: 'identifier',
+      ...tag,
+    });
 }

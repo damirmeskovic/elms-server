@@ -5,5 +5,5 @@ export class TagRecord implements Record {
   readonly _identifierProperty: 'identifier';
   readonly identifier: string;
   readonly name: string;
-  readonly description: string;
+  readonly description?: string;
 }
