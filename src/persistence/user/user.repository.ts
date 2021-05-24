@@ -10,7 +10,7 @@ import { UserRecord } from './user.record';
 export class UserRepository implements RepositoryInterface {
   private readonly assembler: UserAssembler;
   constructor(private readonly persistence: Persistence) {
-    this.assembler = new UserAssembler(persistence);
+    this.assembler = new UserAssembler();
   }
 
   save = async (user: User): Promise<User> =>

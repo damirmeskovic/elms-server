@@ -20,21 +20,19 @@ describe('Update User', () => {
     updateUser = new UpdateUser(findUser, save);
   });
 
-  it('throws if username is missing', async () => {
-    await expect(() =>
+  it('throws if username is missing', () =>
+    expect(() =>
       updateUser.withProperties({
         username: null,
       }),
-    ).rejects.toThrow('Invalid request, username is missing!');
-  });
+    ).rejects.toThrow('Invalid request, username is missing!'));
 
-  it('throws if requested with unknown username', async () => {
-    await expect(() =>
+  it('throws if requested with unknown username', () =>
+    expect(() =>
       updateUser.withProperties({
         username: 'something',
       }),
-    ).rejects.toThrow('Invalid request, unknown username!');
-  });
+    ).rejects.toThrow('Invalid request, unknown username!'));
 
   it('throws if user with requested email already exists', async () => {
     await userRepository.save({
@@ -49,7 +47,7 @@ describe('Update User', () => {
       password: 'member',
     });
 
-    await expect(() =>
+    return expect(() =>
       updateUser.withProperties({
         username: 'member',
         email: 'admin@email.com',

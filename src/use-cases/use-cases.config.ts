@@ -1,5 +1,5 @@
 import { JwtTokenGenerator } from '../authentication/jwt-token.generator';
-import { AuthenticateUser } from './user/authenticate-user.use-case';
+import { AuthenticateUser } from './authentication/authenticate-user.use-case';
 import { CreateUser } from './user/create-user.use-case';
 import { FindUser } from './user/find-user.use-case';
 import { FindUsers } from './user/find-users.use-case';

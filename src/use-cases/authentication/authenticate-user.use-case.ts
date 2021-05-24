@@ -1,5 +1,5 @@
 import { User } from '../../entities/user.entity';
-import { FindUser } from './find-user.use-case';
+import { FindUser } from '../user/find-user.use-case';
 
 export interface Credentials {
   readonly username: string;

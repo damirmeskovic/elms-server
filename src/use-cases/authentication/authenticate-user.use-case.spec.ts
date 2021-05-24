@@ -1,5 +1,5 @@
 import { InMemoryPersistence } from '../../persistence/in-memory.persistence';
-import { FindUser } from './find-user.use-case';
+import { FindUser } from '../user/find-user.use-case';
 import { AuthenticateUser } from './authenticate-user.use-case';
 import { UserRepository } from '../../persistence/user/user.repository';
 
