@@ -23,8 +23,8 @@ export class BookRepository implements RepositoryInterface {
     this.persistence.load('book', bookname).then(this.assembler.assemble);
 
   query = async (query: Query): Promise<Result> => {
-    const offset = query.offset || 0;
-    const limit = query.limit || 100;
+    const offset = query?.offset || 0;
+    const limit = query?.limit || 100;
     const books = await this.persistence
       .loadAll('book')
       .then((records) =>
@@ -32,18 +32,18 @@ export class BookRepository implements RepositoryInterface {
           .map((record) => record as BookRecord)
           .filter(
             (record) =>
-              !query.identifier || record.identifier === query.identifier,
+              !query?.identifier || record.identifier === query.identifier,
           )
           .filter(
             (record) =>
-              !query.title ||
+              !query?.title ||
               record.title
                 .toLocaleLowerCase()
                 .includes(query.title.toLocaleLowerCase()),
           )
           .filter(
             (record) =>
-              !query.description ||
+              !query?.description ||
               (record.description &&
                 record.description
                   .toLocaleLowerCase()
@@ -51,14 +51,14 @@ export class BookRepository implements RepositoryInterface {
           )
           .filter(
             (record) =>
-              !query.authorIdentifiers ||
+              !query?.authorIdentifiers ||
               query.authorIdentifiers.every((authorIdentifier) =>
                 record.authorIdentifiers.includes(authorIdentifier),
               ),
           )
           .filter(
             (record) =>
-              !query.tagIdentifiers ||
+              !query?.tagIdentifiers ||
               query.tagIdentifiers.every(
                 (tagIdentifier) =>
                   record.tagIdentifiers &&
