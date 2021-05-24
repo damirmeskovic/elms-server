@@ -10,6 +10,8 @@ import { UpdateUser } from './user/update-user.use-case';
 import { UserRepository } from './user/user.repository';
 import { FindBooks } from './book/find-books.use-case';
 import { BookRepository } from './book/book.repository';
+import { FindAuthors } from './author/find-authors.use-case';
+import { AuthorRepository } from './author/author.repository';
 
 const generateToken = {
   provide: GenerateToken,
@@ -62,6 +64,12 @@ const findBooks = {
   inject: [BookRepository],
 };
 
+const findAuthors = {
+  provide: FindAuthors,
+  useFactory: (repository: AuthorRepository) => new FindAuthors(repository),
+  inject: [AuthorRepository],
+};
+
 export default [
   generateToken,
   findUser,
@@ -71,4 +79,5 @@ export default [
   updateUser,
   findUsers,
   findBooks,
+  findAuthors,
 ];

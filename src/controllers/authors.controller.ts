@@ -6,23 +6,23 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { FindBooks } from '../use-cases/book/find-books.use-case';
+import { FindAuthors } from '../use-cases/author/find-authors.use-case';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Roles } from '../authentication/roles.decorator';
 import { RolesGuard } from '../authentication/roles.guard';
 import { Role } from '../entities/role.enum';
 import { ApiPaginatedResponse } from './types/api-paginated-response';
-import { BookDto } from './types/book.dto';
-import { BooksQueryDto } from './types/books-query.dto';
+import { AuthorDto } from './types/author.dto';
 import { PaginatedDto } from './types/paginated.dto';
+import { AuthorsQueryDto } from './types/authors-query.dto';
 
-@ApiTags('books')
-@Controller('books')
-export class BooksController {
-  constructor(private readonly findBooks: FindBooks) {}
+@ApiTags('authors')
+@Controller('authors')
+export class AuthorsController {
+  constructor(private readonly findAuthors: FindAuthors) {}
 
   @ApiBearerAuth()
-  @ApiPaginatedResponse(BookDto)
+  @ApiPaginatedResponse(AuthorDto)
   @ApiUnauthorizedResponse({ description: 'Unauthorized.' })
   @ApiForbiddenResponse({
     description: 'User does not have necessary permissions.',
@@ -49,19 +49,21 @@ export class BooksController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
   @Get()
-  async find(@Query() query: BooksQueryDto): Promise<PaginatedDto<BookDto>> {
-    const result = await this.findBooks.with({ ...query });
+  async find(
+    @Query() query: AuthorsQueryDto,
+  ): Promise<PaginatedDto<AuthorDto>> {
+    const result = await this.findAuthors.with({ ...query });
 
     return {
       total: result.total,
       offset: result.offset,
       limit: result.limit,
-      items: result.books.map((book) => ({
-        identifier: book.identifier,
-        title: book.title,
-        authors: book.authors.map((author) => ({ ...author })),
-        description: book.description,
-        tags: book.tags.map((tag) => ({ ...tag })),
+      items: result.authors.map((author) => ({
+        identifier: author.identifier,
+        name: author.name,
+        country: author.country,
+        bio: author.bio,
+        tags: author.tags.map((tag) => ({ ...tag })),
       })),
     };
   }

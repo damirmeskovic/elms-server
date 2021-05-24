@@ -11,8 +11,10 @@ export class LocalJsonPersistence extends Persistence {
   private readonly db: JsonDB;
 
   private readonly typeCollections = {
-    user: '/users',
+    author: '/authors',
     book: '/books',
+    tag: '/tag',
+    user: '/users',
   };
 
   constructor() {
@@ -34,9 +36,9 @@ export class LocalJsonPersistence extends Persistence {
         }),
       );
     }
-    if (!this.db.exists('/books')) {
-      this.db.push('/books', []);
-    }
+    Object.values(this.typeCollections)
+      .filter((typeCollection) => !this.db.exists(typeCollection))
+      .forEach((typeCollection) => this.db.push(typeCollection, []));
   }
 
   load = (
@@ -65,7 +67,8 @@ export class LocalJsonPersistence extends Persistence {
     return this.load(record._typeName, record[record._identifierProperty]);
   };
 
-  private typeCollection = <R extends Record>(
+  private;
+  typeCollection = <R extends Record>(
     typeName: string,
   ): Promise<Version<R>[]> =>
     Promise.resolve(this.db.getData(this.typeCollections[typeName]));

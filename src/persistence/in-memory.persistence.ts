@@ -4,17 +4,23 @@ import { UserRecord } from './user/user.record';
 import { Version } from './version.type';
 import { BookRecord } from './book/book.record';
 import { Record } from './record';
+import { AuthorRecord } from './author/author.record';
+import { TagRecord } from './tag/tag.record';
 
 type InMemoryCollections = {
-  user: Version<UserRecord>[];
+  author: Version<AuthorRecord>[];
   book: Version<BookRecord>[];
+  tag: Version<TagRecord>[];
+  user: Version<UserRecord>[];
 };
 
 @Injectable()
 export class InMemoryPersistence extends Persistence {
   private readonly collections: InMemoryCollections = {
-    user: [],
+    author: [],
     book: [],
+    tag: [],
+    user: [],
   };
 
   load = (
