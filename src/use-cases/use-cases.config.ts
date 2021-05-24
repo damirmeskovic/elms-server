@@ -12,6 +12,8 @@ import { FindBooks } from './book/find-books.use-case';
 import { BookRepository } from './book/book.repository';
 import { FindAuthors } from './author/find-authors.use-case';
 import { AuthorRepository } from './author/author.repository';
+import { FindTags } from './tag/find-tags.use-case';
+import { TagRepository } from './tag/tag.repository';
 
 const generateToken = {
   provide: GenerateToken,
@@ -26,7 +28,7 @@ const findUser = {
   inject: [UserRepository],
 };
 
-const save = {
+const saveUser = {
   provide: SaveUser,
   useFactory: (repository: UserRepository) => new SaveUser(repository),
   inject: [UserRepository],
@@ -70,14 +72,21 @@ const findAuthors = {
   inject: [AuthorRepository],
 };
 
+const findTags = {
+  provide: FindTags,
+  useFactory: (repository: TagRepository) => new FindTags(repository),
+  inject: [TagRepository],
+};
+
 export default [
   generateToken,
   findUser,
-  save,
+  saveUser,
   authenticateUser,
   createUser,
   updateUser,
   findUsers,
   findBooks,
   findAuthors,
+  findTags,
 ];
